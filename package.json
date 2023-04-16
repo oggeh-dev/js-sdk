@@ -1,0 +1,29 @@
+{
+  "name": "@oggeh-dev/js-sdk",
+  "version": "1.0.0",
+  "description": "JavaScript client-side implementation for OGGEH Cloud Platform",
+  "main": "./build/oggeh.js",
+  "module": "./build/oggeh.mjs",
+  "browser": "build/oggeh.browser.min.js",
+  "files": [
+    "build/**/**/*"
+  ],
+  "repository": "https://github.com/oggeh-dev/oggeh-js-sdk.git",
+  "author": "OGGEH, Inc",
+  "license": "MIT",
+  "scripts": {
+    "build:node": "esbuild src/index.js --bundle --platform=node --target=node10.4 --outfile=build/oggeh.js",
+    "build:esm": "esbuild src/index.js --bundle --format=esm --sourcemap --outfile=build/oggeh.mjs",
+    "build:browser": "esbuild src/index.js --bundle --minify --sourcemap --target=es2020 --keep-names --outfile=build/oggeh.browser.min.js",
+    "build": "yarn build:node && yarn build:esm && yarn build:browser"
+  },
+  "engines": {
+    "node": ">=10.4.0"
+  },
+  "dependencies": {
+    "js-sha512": "^0.8.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.17.16"
+  }
+}
