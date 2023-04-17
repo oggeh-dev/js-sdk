@@ -120,7 +120,9 @@ export class OGGEH {
 
   #getAlias(method) {
     const inc =
-      this.#queue.filter((e) => e.method.startsWith(method)).length + 1;
+      this.#queue.filter(
+        (e) => e.method === method || e.method.startsWith(`${method}-`)
+      ).length + 1;
     return `${method.replace(/\./g, "-")}-${inc}`;
   }
 
@@ -130,21 +132,10 @@ export class OGGEH {
     return this.#getResponse(res);
   }
 
-  getApp(select = "title", alias) {
+  get(options = {}) {
     this.#queue.push({
-      alias: alias || this.#getAlias("get.app"),
-      method: "get.app",
-      select: select.split(","),
-    });
-    return this;
-  }
-
-  getPage(key, select = "subject", alias) {
-    this.#queue.push({
-      alias: alias || this.#getAlias("get.page"),
-      method: "get.page",
-      key,
-      select: select.split(","),
+      alias: options.alias || this.#getAlias(options.method),
+      ...options,
     });
     return this;
   }
