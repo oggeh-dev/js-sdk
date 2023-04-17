@@ -113,8 +113,6 @@ export class OGGEH {
         } else {
           return res.stack[0].output;
         }
-      } else {
-        return res;
       }
     }
     return res;
