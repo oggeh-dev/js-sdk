@@ -2,12 +2,9 @@ import { sha512 } from "js-sha512";
 
 let url, https;
 try {
-  // Gracefully attempt to NodeJS builtins, to prevent throwing exceptions in browsers
   url = require("url");
   https = require("https");
-} catch (err) {
-  // Should be browser env
-}
+} catch {}
 
 export class OGGEH {
   #endpoint = "https://api.oggeh.com";
@@ -31,7 +28,7 @@ export class OGGEH {
     }
   }
 
-  #call(data) {
+  #call() {
     const headers = {
       "Content-Type": "application/json",
     };
@@ -49,7 +46,7 @@ export class OGGEH {
       return fetch(`${this.#endpoint}/?${params}`, {
         method: "POST",
         headers,
-        body: JSON.stringify(data), // body data type must match "Content-Type" header
+        body: JSON.stringify(this.#queue), // body data type must match "Content-Type" header
       })
         .then((res) => Object.freeze(res.json()))
         .catch(console.error);
@@ -60,7 +57,7 @@ export class OGGEH {
       } else {
         parsedBaseUrl.port = parsedBaseUrl.protocol === "https:" ? 443 : 80;
       }
-      const postData = JSON.stringify(data);
+      const postData = JSON.stringify(this.#queue);
       return new Promise((resolve, reject) => {
         const req = https.request(
           {
@@ -130,7 +127,7 @@ export class OGGEH {
   }
 
   async promise() {
-    const res = await this.#call(this.#queue);
+    const res = await this.#call();
     this.#queue = [];
     return this.#getResponse(res);
   }
