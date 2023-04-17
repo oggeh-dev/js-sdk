@@ -38,13 +38,23 @@ async function init() {
     const app = await oggeh
       .get({ method: "get.app", select: "title,languages" })
       .promise();
+    // One get() request resulting an object represents the response of the specified method
     console.log("app:", app);
+    // app: { title: 'test', languages: [ 'en', 'fr' ] }
 
     const content = await oggeh
-      .get({ method: "get.pages" })
-      .get({ method: "get.page", key: "test" })
+      .get({ alias: "nav", method: "get.pages" })
+      .get({ alias: "test", method: "get.page", key: "bio" })
       .promise();
+    // Multiple get() requests resulting an object with a list of properties, each property represents the specified method "alias" with a value represents the response of that method
     console.log("content:", content);
+    // content: {
+    //   'nav': [
+    //     { key: 'about', subject: 'About', childs: [] },
+    //     { key: 'services', subject: 'Services', childs: [] }
+    //   ],
+    //   'test': { key: 'bio', subject: 'Bio' }
+    // }
   } catch (err) {
     console.error(err);
   }
