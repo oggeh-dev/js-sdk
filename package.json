@@ -8,7 +8,7 @@
   "files": [
     "build/**/**/*"
   ],
-  "repository": "https://github.com/oggeh-dev/oggeh-js-sdk.git",
+  "repository": "https://github.com/oggeh/oggeh-js-sdk.git",
   "author": "OGGEH, Inc",
   "license": "MIT",
   "scripts": {
