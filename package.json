@@ -1,5 +1,5 @@
 {
-  "name": "@oggeh-dev/js-sdk",
+  "name": "@oggeh/js-sdk",
   "version": "1.0.0",
   "description": "JavaScript client-side implementation for OGGEH Cloud Platform",
   "main": "./build/oggeh.js",
