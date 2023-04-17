@@ -49,11 +49,11 @@ async function init() {
     // Multiple get() requests resulting an object with a list of properties, each property represents the specified method "alias" with a value represents the response of that method
     console.log("content:", content);
     // content: {
-    //   'nav': [
+    //   nav: [
     //     { key: 'about', subject: 'About', childs: [] },
     //     { key: 'services', subject: 'Services', childs: [] }
     //   ],
-    //   'test': { key: 'bio', subject: 'Bio' }
+    //   test: { key: 'bio', subject: 'Bio' }
     // }
   } catch (err) {
     console.error(err);
