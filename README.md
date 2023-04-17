@@ -7,7 +7,7 @@
 ### Browser
 
 ```html
-<script src="https://unpkg.com/@oggeh/js-sdk/build/oggeh.browser.min.js"></script>
+<script src="https://unpkg.com/@oggeh/js-sdk/dist/oggeh.browser.min.js"></script>
 ```
 
 ### ES Module
