@@ -76,8 +76,9 @@ async function init() {
       token,
       // Form fields as returned by the "get.page" method
       "text-XXX": "Candidate Name",
-      "file-XXX": await readFile("resume.pdf", "candidate-resume.pdf", "pdf"), // Browser file example
-      // "file-XXX": require("fs")createReadStream("resume.pdf"), // NodeJS file example
+      "file-XXX": await readFile("resume.pdf", "candidate-resume.pdf", "pdf"), // Browser file example 1
+      // "file-XXX": document.querySelector("input[type=file]").files[0], // Browser file example 2
+      // "file-XXX": require("fs").createReadStream("resume.pdf"), // NodeJS file example
     });
   } catch (err) {
     console.error(err);
