@@ -22,13 +22,15 @@ import { OGGEH } from "@oggeh/js-sdk";
 const { OGGEH } = require("@oggeh/js-sdk");
 ```
 
-## Example
+## Examples
 
 ```javascript
 import { OGGEH } from "@oggeh/js-sdk";
 
 const oggeh = new OGGEH({
-  api_key: "YOUR_OGGEH_APP_API_KEY",
+  api_key: "YOUR_OGGEH_APP_API_KEY", // Required
+  // api_secret: "YOUR_OGGEH_APP_API_SECRET", // Use only in mobile/desktop apps
+  // sandbox_key: "YOUR_OGGEH_APP_SANDBOX_KEY", // Use only in development environment
 });
 
 init();
@@ -55,9 +57,37 @@ async function init() {
     //   ],
     //   test: { key: 'bio', subject: 'Bio' }
     // }
+
+    // For forms, you need to yse post() request
+    // Applies only to "post.page.form" and "post.contact.form" methods
+    // 1. First you need to generate a unique token for making the request
+    const token = await oggeh
+      .get({
+        alias: "token",
+        method: "get.form.token",
+        key: "application",
+      })
+      .promise();
+    // 2. Include the generated token with the request
+    const form = await oggeh.post({
+      alias: "form",
+      method: "post.page.form",
+      key: "application",
+      token,
+      // Form fields as returned by the "get.page" method
+      "text-XXX": "Candidate Name",
+      "file-XXX": await readFile("resume.pdf", "candidate-resume.pdf", "pdf"), // Browser file example
+      // "file-XXX": require("fs")createReadStream("resume.pdf"), // NodeJS file example
+    });
   } catch (err) {
     console.error(err);
   }
+}
+
+async function readFile(path, name, type) {
+  const response = await fetch(path);
+  const data = await response.blob();
+  return new File([data], name, { type });
 }
 ```
 
