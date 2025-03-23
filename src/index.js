@@ -30,38 +30,11 @@ export class OGGEH {
       if (config.sandbox_key) this.#sandbox_key = config.sandbox_key;
       if (config.endpoint) this.#endpoint = config.endpoint;
       this.#cache = {};
+      this.#queue = [];
     }
   }
 
   #call(formData) {
-    const headers = formData
-      ? typeof window !== "undefined"
-        ? {}
-        : formData.getHeaders()
-      : {
-          "Content-Type": "application/json",
-        };
-    if (this.#sandbox_key)
-      headers["SandBox"] = sha512.hmac(
-        this.#sandbox_key,
-        this.#domain + this.#api_key
-      );
-    let params = `lang=${this.#lang}&api_key=${this.#api_key}`;
-    if (this.#api_secret) params += `&api_secret=${this.#api_secret}`;
-    if (typeof window !== "undefined")
-      return fetch(`${this.#endpoint}/?${params}`, {
-        method: "POST",
-        headers,
-        body: formData || JSON.stringify(this.#queue), // body data type must match "Content-Type" header
-      })
-        .then((res) => Object.freeze(res.json()))
-        .catch((err) => console.error("OGGEH :: Error", err));
-    const parsedBaseUrl = url.parse(this.#endpoint);
-    if (parsedBaseUrl.port) {
-      parsedBaseUrl.port = Number(parsedBaseUrl.port);
-    } else {
-      parsedBaseUrl.port = parsedBaseUrl.protocol === "https:" ? 443 : 80;
-    }
     return new Promise((resolve, reject) => {
       const cache = {}, data = [];
       for (const item of this.#queue)
@@ -70,7 +43,38 @@ export class OGGEH {
         else
           data.push(item);
       if (!data.length) return resolve({cache});
+      const headers = formData
+        ? typeof window !== "undefined"
+          ? {}
+          : formData.getHeaders()
+        : {
+            "Content-Type": "application/json",
+          };
+      if (this.#sandbox_key)
+        headers["SandBox"] = sha512.hmac(
+          this.#sandbox_key,
+          this.#domain + this.#api_key
+        );
+      let params = `lang=${this.#lang}&api_key=${this.#api_key}`;
+      if (this.#api_secret) params += `&api_secret=${this.#api_secret}`;
       const postData = formData || JSON.stringify(data);
+      if (typeof window !== "undefined") {
+        fetch(`${this.#endpoint}/?${params}`, {
+          method: "POST",
+          headers,
+          body: postData, // body data type must match "Content-Type" header
+        })
+          .then((res) => res.json())
+          .then((res) => resolve({res, cache}))
+          .catch(reject);
+        return;
+      }
+      const parsedBaseUrl = url.parse(this.#endpoint);
+      if (parsedBaseUrl.port) {
+        parsedBaseUrl.port = Number(parsedBaseUrl.port);
+      } else {
+        parsedBaseUrl.port = parsedBaseUrl.protocol === "https:" ? 443 : 80;
+      }
       if (!formData) headers["Content-Length"] = Buffer.byteLength(postData);
       const {hostname, port, path} = parsedBaseUrl;
       const req = https.request(
@@ -145,9 +149,14 @@ export class OGGEH {
   }
 
   async promise() {
-    const {res, cache} = await this.#call();
-    this.#queue = [];
-    return this.#getResponse(res, cache);
+    try {
+      const {res, cache} = await this.#call();
+      this.#queue = [];
+      return this.#getResponse(res, cache);
+    } catch (error) {
+      console.error("OGGEH :: Error", err);
+    }
+    return;
   }
 
   #formatDate(date) {
