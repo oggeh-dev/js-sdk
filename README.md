@@ -29,8 +29,9 @@ import { OGGEH } from "@oggeh/js-sdk";
 
 const oggeh = new OGGEH({
   api_key: "YOUR_OGGEH_APP_API_KEY", // Required
-  // api_secret: "YOUR_OGGEH_APP_API_SECRET", // Use only in mobile/desktop apps
+  // api_secret: "YOUR_OGGEH_APP_API_SECRET", // Use only in mobile/desktop/nodejs apps
   // sandbox_key: "YOUR_OGGEH_APP_SANDBOX_KEY", // Use only in development environment
+  // domain: "YOUR_OGGEH_HOSTNAME", // Use only in mobile/desktop/nodejs apps
 });
 
 init();
