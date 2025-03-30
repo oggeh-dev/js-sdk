@@ -42,7 +42,7 @@ export class OGGEH {
           cache[item.alias] = this.#cache[item.alias];
         else
           data.push(item);
-      if (!data.length) return resolve({cache});
+      if (!formData && !data.length) return resolve({cache});
       const headers = formData
         ? typeof window !== "undefined"
           ? {}
@@ -207,7 +207,7 @@ export class OGGEH {
         formData.append(key, value);
       }
     });
-    const res = await this.#call(formData);
+    const {res} = await this.#call(formData);
     return this.#getResponse(res);
   }
 }
