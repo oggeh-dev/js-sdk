@@ -154,7 +154,7 @@ export class OGGEH {
       this.#queue = [];
       return this.#getResponse(res, cache);
     } catch (error) {
-      console.error("OGGEH :: Error", err);
+      console.error("OGGEH :: Error", error);
     }
     return;
   }
